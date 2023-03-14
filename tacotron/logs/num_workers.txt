@@ -1,0 +1,69 @@
+[I 230308 19:57:38 num_workers:37] Finish with:44.132609367370605 second, num_workers=0, batch_size=32
+[I 230308 19:58:32 num_workers:37] Finish with:53.663307189941406 second, num_workers=1, batch_size=32
+[I 230308 19:59:09 num_workers:37] Finish with:37.05278468132019 second, num_workers=2, batch_size=32
+[I 230308 19:59:41 num_workers:37] Finish with:31.65061616897583 second, num_workers=3, batch_size=32
+[I 230308 20:01:50 num_workers:36] Finish with:29.42583203315735 second, num_workers=4, batch_size=32
+[I 230308 20:02:22 num_workers:36] Finish with:32.919196367263794 second, num_workers=5, batch_size=32
+[I 230308 20:07:37 num_workers:36] Finish with:172.54808115959167 second, num_workers=0, batch_size=128
+[I 230308 20:11:06 num_workers:36] Finish with:208.87850165367126 second, num_workers=1, batch_size=128
+[I 230308 20:13:28 num_workers:36] Finish with:142.00059485435486 second, num_workers=2, batch_size=128
+[I 230308 20:15:30 num_workers:36] Finish with:122.35857248306274 second, num_workers=3, batch_size=128
+changing epochs to max out at 5 instead of 6[I 230308 20:18:13 num_workers:36] Finish with:73.86564254760742 second, num_workers=0, batch_size=64
+[I 230308 20:19:09 num_workers:36] Finish with:55.971667528152466 second, num_workers=2, batch_size=64
+[I 230308 20:20:03 num_workers:36] Finish with:54.47898054122925 second, num_workers=4, batch_size=64
+[I 230308 20:20:56 num_workers:36] Finish with:52.57668876647949 second, num_workers=6, batch_size=64
+[I 230308 20:22:29 num_workers:36] Finish with:52.052457094192505 second, num_workers=6, batch_size=64
+[I 230308 20:23:39 num_workers:36] Finish with:70.29999041557312 second, num_workers=8, batch_size=64
+[I 230308 20:25:05 num_workers:36] Finish with:85.810555934906 second, num_workers=10, batch_size=64
+[I 230308 20:26:20 num_workers:36] Finish with:53.17725110054016 second, num_workers=6, batch_size=64
+[I 230308 20:27:30 num_workers:36] Finish with:70.19783639907837 second, num_workers=8, batch_size=64
+[I 230308 20:29:22 num_workers:36] Finish with:67.72017502784729 second, num_workers=5, batch_size=64
+[I 230308 20:30:22 num_workers:36] Finish with:60.68730926513672 second, num_workers=7, batch_size=64
+[I 230308 21:17:16 num_workers:46] Configuration:
+    	GPU:	2x Tesla V100-SXM2-16GB
+    	CPU Count:	36
+[I 230308 21:18:04 num_workers:46] Configuration:
+    	GPU:	2x Tesla V100-SXM2-16GB
+    	CPU Count:	36
+[I 230308 21:18:46 num_workers:38] Finish with:42.25566124916077 second, num_workers=1, batch_size=32
+[I 230308 21:19:09 num_workers:38] Finish with:23.05489993095398 second, num_workers=3, batch_size=32
+[I 230308 21:19:41 num_workers:38] Finish with:31.48762321472168 second, num_workers=5, batch_size=32
+[I 230308 21:20:12 num_workers:38] Finish with:31.75979471206665 second, num_workers=7, batch_size=32
+[I 230308 21:20:51 num_workers:38] Finish with:38.567171573638916 second, num_workers=9, batch_size=32
+[I 230308 21:21:41 num_workers:38] Finish with:49.801867961883545 second, num_workers=11, batch_size=32
+[I 230308 21:21:54 num_workers:46] Configuration:
+    	GPU:	2x Tesla V100-SXM2-16GB
+    	CPU Count:	36
+[I 230308 21:22:34 num_workers:38] Finish with:40.37121844291687 second, num_workers=1, batch_size=32
+[I 230308 21:22:58 num_workers:47] Configuration:
+    	GPU:	2x Tesla V100-SXM2-16GB
+    	CPU Count:	36
+[I 230308 21:22:58 num_workers:21] Batch Size: 32
+[I 230308 21:23:25 num_workers:39] Finish with:26.220253705978394 second, num_workers=2, batch_size=32
+[I 230308 21:23:51 num_workers:39] Finish with:25.887725830078125 second, num_workers=4, batch_size=32
+[I 230308 21:24:18 num_workers:39] Finish with:27.06222915649414 second, num_workers=6, batch_size=32
+[I 230308 21:24:55 num_workers:39] Finish with:37.54421019554138 second, num_workers=8, batch_size=32
+[I 230308 21:34:30 num_workers:47] Configuration:
+    	GPU:	4x Tesla V100-SXM2-16GB
+    	CPU Count:	36
+[I 230308 21:34:30 num_workers:21] Batch Size: 32
+[I 230308 21:35:06 num_workers:39] Finish with:35.149937868118286 second, num_workers=2, batch_size=32
+[I 230308 21:35:34 num_workers:39] Finish with:28.659355878829956 second, num_workers=4, batch_size=32
+[I 230308 21:36:01 num_workers:39] Finish with:26.835932970046997 second, num_workers=6, batch_size=32
+[I 230308 21:36:36 num_workers:39] Finish with:34.65806317329407 second, num_workers=8, batch_size=32
+[I 230308 21:42:16 num_workers:47] Configuration:
+    	GPU:	4x Tesla V100-SXM2-16GB
+    	CPU Count:	36
+[I 230308 21:42:16 num_workers:21] Batch Size: 32
+[I 230308 21:42:47 num_workers:39] Finish with:30.993761777877808 second, num_workers=2, batch_size=32
+[I 230308 21:43:13 num_workers:39] Finish with:25.83442449569702 second, num_workers=4, batch_size=32
+[I 230308 21:43:35 num_workers:39] Finish with:22.313976526260376 second, num_workers=6, batch_size=32
+[I 230308 21:44:01 num_workers:39] Finish with:25.878642797470093 second, num_workers=8, batch_size=32
+[I 230308 21:50:28 num_workers:47] Configuration:
+    	GPU:	4x Tesla V100-SXM2-16GB
+    	CPU Count:	36
+[I 230308 21:50:28 num_workers:21] Batch Size: 32
+[I 230308 21:50:58 num_workers:39] Finish with:30.43033766746521 second, num_workers=2, batch_size=32
+[I 230308 21:51:25 num_workers:39] Finish with:26.560254335403442 second, num_workers=4, batch_size=32
+[I 230308 21:51:48 num_workers:39] Finish with:23.262694120407104 second, num_workers=6, batch_size=32
+[I 230308 21:52:14 num_workers:39] Finish with:26.00784182548523 second, num_workers=8, batch_size=32
