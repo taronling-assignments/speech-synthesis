@@ -1,9 +1,20 @@
 #-*- coding: utf-8 -*-
 
-from module import *
+# Base Imports
+from collections import OrderedDict
+import random
+import numpy as np
+import torch
+from torch.autograd import Variable
+import torch.nn as nn
+import torch.nn.functional as F
+
+
+# Internal Imports
+from module import Prenet, CBHG, AttentionDecoder, SeqLinear
+import hyperparams as hp
 from text.symbols import symbols
 import hyperparams as hp
-import random
 
 use_cuda = torch.cuda.is_available()
 
