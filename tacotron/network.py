@@ -11,10 +11,13 @@ import torch.nn.functional as F
 
 
 # Internal Imports
-from module import Prenet, CBHG, AttentionDecoder, SeqLinear
+from modules.prenet import Prenet
+from modules.cbhg import CBHG
+from modules.style_encoder import StyleEncoder
+from modules.attention_decoder import AttentionDecoder
+from modules.seq_linear import SeqLinear
 import hyperparams as hp
 from text.symbols import symbols
-import hyperparams as hp
 
 use_cuda = torch.cuda.is_available()
 
@@ -41,7 +44,10 @@ class Encoder(nn.Module):
 
     def forward(self, input_):
 
+        # Create embeddings
         input_ = torch.transpose(self.embed(input_),1,2)
+
+        # Feed embeddings into prenet
         prenet = self.prenet.forward(input_)
         memory = self.cbhg.forward(prenet)
 

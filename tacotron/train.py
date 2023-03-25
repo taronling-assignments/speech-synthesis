@@ -8,7 +8,7 @@ import os
 import time
 
 # Internal Imports
-from network import Encoder, MelDecoder, PostProcessingNet, Tacotron
+from network import Tacotron
 import hyperparams as hp
 from data import get_dataset, DataLoader, collate_fn, get_param_size
 
@@ -57,7 +57,7 @@ def main(args):
     except:
         logger.info("\n--------Start New Training--------\n")
 
-    # Training
+    # Set training mode
     model = model.train()
 
     # Make checkpoint directory if not exists
@@ -70,6 +70,7 @@ def main(args):
         logger.info('Criterion on M1')
     elif use_cuda:
         criterion = nn.L1Loss().cuda()
+        logger.info('Criterion on cuda')
     else:
         criterion = nn.L1Loss()
 
@@ -94,6 +95,7 @@ def main(args):
             # Make decoder input by concatenating [GO] Frame
             try:
                 mel_input = np.concatenate((np.zeros([args.batch_size, hp.num_mels, 1], dtype=np.float32),data[2][:,:,1:]), axis=2)
+                print(mel_input)
             except:
                 raise TypeError("not same dimension")
 
@@ -187,7 +189,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
     logger.info('Batch Size: {}'.format(args.batch_size))
     logger.info('Num Workers: {}'.format(args.num_workers))
-    logger.info('Configuration:\n\tGPU:\t{}x {}\n\tCPU Count:\t{}'.format(
-        torch.cuda.device_count(), torch.cuda.get_device_name(0), mp.cpu_count()))
+
+    try: # for logging on artemis
+        logger.info('Configuration:\n\tGPU:\t{}x {}\n\tCPU Count:\t{}'.format(
+            torch.cuda.device_count(), torch.cuda.get_device_name(0), mp.cpu_count()))
+    except:
+        logger.warning('Training not completed on CUDA compatible device.')
+        
     main(args)
 

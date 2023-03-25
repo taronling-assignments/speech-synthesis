@@ -1,10 +1,15 @@
+
+# Imports
 import torch
-from torch.autograd import Variable
 import torch.nn as nn
-import torch.nn.functional as F
-from collections import OrderedDict
+from torch.autograd import Variable
 import numpy as np
-import hyperparams as hp
+
+from collections import OrderedDict
+
+# Internal Imports
+from modules.seq_linear import SeqLinear
+
 
 use_cuda = torch.cuda.is_available()
 
@@ -13,72 +18,6 @@ try: # older versions of torch don't recognise mps
     device = torch.device('mps')
 except:
     use_mps = False
-    
-
-class SeqLinear(nn.Module):
-    """
-    Linear layer for sequences
-    """
-    def __init__(self, input_size, output_size, time_dim=2):
-        """
-        :param input_size: dimension of input
-        :param output_size: dimension of output
-        :param time_dim: index of time dimension
-        """
-        super(SeqLinear, self).__init__()
-        self.input_size = input_size
-        self.output_size = output_size
-        self.time_dim = time_dim
-        self.linear = nn.Linear(input_size, output_size)
-
-
-    def forward(self, input_):
-        """
-
-        :param input_: sequences
-        :return: outputs
-        """
-        batch_size = input_.size()[0]
-        if self.time_dim == 2:
-            input_ = input_.transpose(1, 2).contiguous()
-        input_ = input_.view(-1, self.input_size)
-
-        out = self.linear(input_).view(batch_size, -1, self.output_size)
-
-        if self.time_dim == 2:
-            out = out.contiguous().transpose(1, 2)
-
-        return out
-
-class Prenet(nn.Module):
-    """
-    Prenet before passing through the network
-    """
-    def __init__(self, input_size, hidden_size, output_size):
-        """
-
-        :param input_size: dimension of input
-        :param hidden_size: dimension of hidden unit
-        :param output_size: dimension of output
-        """
-        super(Prenet, self).__init__()
-        self.input_size = input_size
-        self.output_size = output_size
-        self.hidden_size = hidden_size
-        self.layer = nn.Sequential(OrderedDict([
-             ('fc1', SeqLinear(self.input_size, self.hidden_size)),
-             ('relu1', nn.ReLU()),
-             ('dropout1', nn.Dropout(0.5)),
-             ('fc2', SeqLinear(self.hidden_size, self.output_size)),
-             ('relu2', nn.ReLU()),
-             ('dropout2', nn.Dropout(0.5)),
-        ]))
-
-    def forward(self, input_):
-
-        out = self.layer(input_)
-
-        return out
 
 class CBHG(nn.Module):
     """
@@ -227,78 +166,3 @@ class Highwaynet(nn.Module):
             out = h * t + out * c
 
         return out
-
-class AttentionDecoder(nn.Module):
-    """
-    Decoder with attention mechanism (Vinyals et al.)
-    """
-    def __init__(self, num_units):
-        """
-
-        :param num_units: dimension of hidden units
-        """
-        super(AttentionDecoder, self).__init__()
-        self.num_units = num_units
-
-        self.v = nn.Linear(num_units, 1, bias=False)
-        self.W1 = nn.Linear(num_units, num_units, bias=False)
-        self.W2 = nn.Linear(num_units, num_units, bias=False)
-
-        self.attn_grucell = nn.GRUCell(num_units // 2, num_units)
-        self.gru1 = nn.GRUCell(num_units, num_units)
-        self.gru2 = nn.GRUCell(num_units, num_units)
-
-        self.attn_projection = nn.Linear(num_units * 2, num_units)
-        self.out = nn.Linear(num_units, hp.num_mels * hp.outputs_per_step)
-
-    def forward(self, decoder_input, memory, attn_hidden, gru1_hidden, gru2_hidden):
-
-        memory_len = memory.size()[1]
-        batch_size = memory.size()[0]
-
-        # Get keys
-        keys = self.W1(memory.contiguous().view(-1, self.num_units))
-        keys = keys.view(-1, memory_len, self.num_units)
-
-        # Get hidden state (query) passed through GRUcell
-        d_t = self.attn_grucell(decoder_input, attn_hidden)
-
-        # Duplicate query with same dimension of keys for matrix operation (Speed up)
-        d_t_duplicate = self.W2(d_t).unsqueeze(1).expand_as(memory)
-
-        # Calculate attention score and get attention weights
-        attn_weights = self.v(torch.tanh(keys + d_t_duplicate).view(-1, self.num_units)).view(-1, memory_len, 1)
-        attn_weights = attn_weights.squeeze(2)
-        attn_weights = F.softmax(attn_weights)
-
-        # Concatenate with original query
-        d_t_prime = torch.bmm(attn_weights.view([batch_size,1,-1]), memory).squeeze(1)
-
-        # Residual GRU
-        gru1_input = self.attn_projection(torch.cat([d_t, d_t_prime], 1))
-        gru1_hidden = self.gru1(gru1_input, gru1_hidden)
-        gru2_input = gru1_input + gru1_hidden
-
-        gru2_hidden = self.gru2(gru2_input, gru2_hidden)
-        bf_out = gru2_input + gru2_hidden
-
-        # Output
-        output = self.out(bf_out).view(-1, hp.num_mels, hp.outputs_per_step)
-
-        return output, d_t, gru1_hidden, gru2_hidden
-
-    def inithidden(self, batch_size):
-        if use_mps:
-            attn_hidden = Variable(torch.zeros(batch_size, self.num_units).to(device=device), requires_grad=False)
-            gru1_hidden = Variable(torch.zeros(batch_size, self.num_units).to(device=device), requires_grad=False)
-            gru2_hidden = Variable(torch.zeros(batch_size, self.num_units).to(device=device), requires_grad=False)
-        elif use_cuda:
-            attn_hidden = Variable(torch.zeros(batch_size, self.num_units), requires_grad=False).cuda()
-            gru1_hidden = Variable(torch.zeros(batch_size, self.num_units), requires_grad=False).cuda()
-            gru2_hidden = Variable(torch.zeros(batch_size, self.num_units), requires_grad=False).cuda()
-        else:
-            attn_hidden = Variable(torch.zeros(batch_size, self.num_units), requires_grad=False)
-            gru1_hidden = Variable(torch.zeros(batch_size, self.num_units), requires_grad=False)
-            gru2_hidden = Variable(torch.zeros(batch_size, self.num_units), requires_grad=False)
-
-        return attn_hidden, gru1_hidden, gru2_hidden

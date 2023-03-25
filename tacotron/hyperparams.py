@@ -9,6 +9,8 @@ min_level_db = -100
 ref_level_db = 20
 hidden_size = 128
 embedding_size = 256
+ref_encoding_filters = [32, 32, 64, 64, 128, 128]
+
 
 max_iters = 200
 griffin_lim_iters = 60
